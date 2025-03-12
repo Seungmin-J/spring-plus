@@ -57,6 +57,7 @@ public class JwtFilter implements Filter {
 
             UserRole userRole = UserRole.valueOf(claims.get("userRole", String.class));
 
+            httpRequest.setAttribute("nickname", claims.get("nickname"));
             httpRequest.setAttribute("userId", Long.parseLong(claims.getSubject()));
             httpRequest.setAttribute("email", claims.get("email"));
             httpRequest.setAttribute("userRole", claims.get("userRole"));
