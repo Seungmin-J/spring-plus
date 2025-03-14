@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.todo.dto.request.SearchTodoRequest;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
+import org.example.expert.domain.todo.dto.response.SearchTodoResponse;
 import org.example.expert.domain.todo.entity.Todo;
 import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
@@ -55,8 +57,6 @@ public class TodoService {
     public Page<TodoResponse> getTodos(int page, int size, String weather, String startDate, String endDate) {
         Pageable pageable = PageRequest.of(page - 1, size);
 
-//        (weather != null) ?
-
         LocalDateTime localStartDate = (startDate != null)
                 ? LocalDate.parse(startDate, DateTimeFormatter.ISO_DATE).atStartOfDay()
                 : LocalDateTime.of(0, 1,1, 0, 0, 0);
@@ -94,5 +94,18 @@ public class TodoService {
                 todo.getCreatedAt(),
                 todo.getModifiedAt()
         );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<SearchTodoResponse> searchTodo(
+            SearchTodoRequest request,
+            Pageable pageable
+    ) {
+      return todoRepository.searchTodos(
+              request.getTitle(),
+              request.getNickname(),
+              request.getStartDate(),
+              request.getEndDate(),
+              pageable);
     }
 }
