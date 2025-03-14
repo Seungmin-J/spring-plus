@@ -34,12 +34,13 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    public String createToken(Long userId, String email, UserRole userRole, String nickname) {
+    public String createToken(Long id, String email, String nickname, UserRole userRole) {
+        log.info("createToken");
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(String.valueOf(userId))
+                        .setSubject(String.valueOf(id))
                         .claim("email", email)
                         .claim("userRole", userRole)
                         .claim("nickname", nickname)
